@@ -1,9 +1,14 @@
-const client = require('../lib/client');
+/* eslint-disable no-console */
+// const client = require('../lib/client');
+require('dotenv').config();
+const pg = require('pg');
+const Client = pg.Client;
 
 // async/await needs to run in a function
 run();
 
 async function run() {
+    const client = new Client(process.env.DATABASE_URL);
 
     try {
         // initiate connecting to db
