@@ -1,0 +1,9 @@
+# *** Server ***
+PORT=3000
+
+# *** Database ***
+DATABASE_URL=
+ 
+PGSSLMODE=require
+
+# *** API KEYS ***
