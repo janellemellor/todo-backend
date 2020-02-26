@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+//consider exporting all the required Client dependencies into a separate library so that you can export just the one line. 
 // const client = require('../lib/client');
 require('dotenv').config();
 const pg = require('pg');
@@ -15,12 +16,7 @@ async function run() {
         await client.connect();
 
         // run a query to create tables
-        await client.query(`
-                CREATE TABLE users (
-                    id SERIAL PRIMARY KEY,
-                    email VARCHAR(256) NOT NULL,
-                    hash VARCHAR(512) NOT NULL
-                );           
+        await client.query(`        
                 CREATE TABLE todos (
                     id SERIAL PRIMARY KEY NOT NULL,
                     task VARCHAR(512) NOT NULL,
