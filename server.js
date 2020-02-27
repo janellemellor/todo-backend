@@ -13,13 +13,12 @@ console.log(process.env);
 const Client = pg.Client;
 // (create and connect using DATABASE_URL)
 const client = new Client(process.env.DATABASE_URL);
-// console.log('==============', process.env.DATABASE_URL);
 client.connect();
 
 
 // Application Setup
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 // (add middleware utils: logging, cors, static files from public)
 // app.use(...)
 app.use(morgan('dev'));
@@ -33,11 +32,31 @@ app.get('/api/todos', async(req, res) => {
     try {
         const result = await client.query(`
         SELECT * FROM todos;
-        
         `);
         res.json(result.rows);
         console.log(result.rows);
     } catch (err) {
+        res.status(500).json({
+            error: err.message || err
+        });
+    }
+});
+
+//post route to todos API
+app.post('/api/todos', async(req, res) => {
+
+    try {
+        const result = await client.query(`
+        INSERT INTO todos (task, complete)
+        VALUES ($1, $2)
+        RETURNING *;
+        `,
+    
+        [req.task, req.complete]);
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.log(err);
         res.status(500).json({
             error: err.message || err
         });
