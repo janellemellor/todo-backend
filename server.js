@@ -44,15 +44,16 @@ app.get('/api/todos', async(req, res) => {
 
 //post route to todos API
 app.post('/api/todos', async(req, res) => {
-
+    const todo = req.body;
+    console.log('=========', todo);
     try {
         const result = await client.query(`
         INSERT INTO todos (task, complete)
-        VALUES ($1, $2)
+        VALUES ($1, false)
         RETURNING *;
         `,
     
-        [req.task, req.complete]);
+        [req.body.task]);
 
         res.json(result.rows[0]);
     } catch (err) {
