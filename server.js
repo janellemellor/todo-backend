@@ -75,7 +75,6 @@ app.put('/api/todos/:id', async(req, res) => {
             WHERE id = $2
             RETURNING *;
         `,
-        
         [req.body.complete, req.params.id]);
 
         res.json(result.rows[0]);
