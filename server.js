@@ -42,10 +42,9 @@ app.get('/api/todos', async(req, res) => {
     }
 });
 
-//post route to todos API
+//post route (to create new todo)
 app.post('/api/todos', async(req, res) => {
-    const todo = req.body;
-    console.log('=========', todo);
+    
     try {
         const result = await client.query(`
         INSERT INTO todos (task, complete)
@@ -63,6 +62,31 @@ app.post('/api/todos', async(req, res) => {
         });
     }
 });
+
+//put route (to update todo/mark complete/incomplete)
+app.put('/api/todos/:id', async(req, res) => {
+    // const id = req.params.id;
+    // const todo = req.body;
+
+    try {
+        const result = await client.query(`
+            UPDATE todos
+            SET complete = $1
+            WHERE id = $2
+            RETURNING *;
+        `,
+        
+        [req.body.complete, req.params.id]);
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error:err.message || err
+        });
+    }
+});
+
 
 //start the server
 app.listen(PORT, () => {
